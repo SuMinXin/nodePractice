@@ -4,7 +4,6 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
 app.get('/', (request,response) => {
-	//response.send('Yo, World!');
 	response.sendFile(__dirname + '\\view\\chatView.html');
 });
 

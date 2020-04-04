@@ -67,14 +67,42 @@
 	</style>
 </head>
 <body>
-	<div id="message"></div>
+	<div id="container">
+		<div id="status-box">Server: <span id="status">-</span> / <span id="online">0</span>online.
+		</div>
+	<div id="content">
+		<div id="message">
+			<span class="name">Minn</span>
+			Hello!
+		</div>
+		<div id="message">
+			<span class="name">Eddie</span>
+			Hi!
+		</div>
+	</div>
+	<div id="sendbox">
+		<form id="sendform">
+			<input type="text" name="name" id="name" eholder="暱稱"/>
+			<input type="text" name="message" id="message" eholder="想說什麼?"/>
+			<input type="submit" value="送出" />
+		</form>
+	</div>
+	</div>
+
 	<script>
-		socket.on("connect", function(){
-		socket.emit("greet");
-	});
-		socket.on("greet", function (message) {
-			$('#message').innertText = message;
-		})
+		document.addEventListener("DOMContentLaoaded", ()=>{
+			var status = $('#status');
+			var online = $('#online');
+			socket.on("connect", function(){
+				status.innertText = "Connected!";
+			});
+			socket.on("disconnect", function () {
+				status.innertText = "Disconnected!";
+			});
+			socket.on("on;ine", function (amt) {
+				online.innertText = amt;
+			});
+		});
 	</script>
 </body>
 </html>
