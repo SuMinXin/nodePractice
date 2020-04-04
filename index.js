@@ -11,6 +11,9 @@ app.get('/', (request,response) => {
 io.on('connection', (socket) => {
 	console.log('Hey, Nice To See You.');
 
+	socket.on('greet', () => {
+		socket.emit("greet", "Hello, my guest.");
+	});
 	socket.on('disconnect', () => {
 		console.log('Bye!');
 	});

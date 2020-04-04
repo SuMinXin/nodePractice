@@ -8,8 +8,73 @@
 	<script>
 		var socket = io();
 	</script>
+	<style>
+		html, body{
+			padding:0;
+			margin: 0;
+		}
+		#container{
+			top:50px;
+			width: 500px;
+			margin: 0 auto;
+			display: block;
+			position: relative;
+		}
+		#status-box{
+			text-align:right;
+			font-size: .6em;
+		}
+		#content{
+			width:100%;
+			height: 350px;
+			border: 1px solid darkolibegreen;
+			border-radius: 5px;
+			overflow: auto;
+		}
+		#sendbox{
+			width: 100%;
+			text-align: center;
+		}
+		#sendbox input{
+			display: inline-block;
+		}
+		input[name="name"]{
+			width: 15%;
+		}
+		input[name="message"]{
+			width: 70%;
+		}
+		input[type="button"]{
+			width:10%;
+		}
+		.message {
+			width: 73%;
+			display: inline-block;
+			padding: 5px 0 5px 10px;
+		}
+		.message > span{
+			width: 25%;
+			display: inline-block;
+		}
+		.message > span::before{
+			color: darkred;
+			content: "{";
+		} 
+		.msg > span::after {
+			color: darkred;
+			content: " } ";
+		}
+	</style>
 </head>
 <body>
-	<div>DO NOTHING...JUST CONNECTED</div>
+	<div id="message"></div>
+	<script>
+		socket.on("connect", function(){
+		socket.emit("greet");
+	});
+		socket.on("greet", function (message) {
+			$('#message').innertText = message;
+		})
+	</script>
 </body>
 </html>
