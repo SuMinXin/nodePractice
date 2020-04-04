@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>WELCOME TO CHATROOM</title>
 	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script>
 		var socket = io();
 	</script>
@@ -13,29 +14,29 @@
 			padding:0;
 			margin: 0;
 		}
-		#container{
+		#container {
 			top:50px;
 			width: 500px;
 			margin: 0 auto;
 			display: block;
 			position: relative;
 		}
-		#status-box{
+		#status-box {
 			text-align:right;
 			font-size: .6em;
 		}
-		#content{
+		#content {
 			width:100%;
 			height: 350px;
-			border: 1px solid darkolibegreen;
-			border-radius: 5px;
+			border: 1px solid cornflowerblue;
+			border-radius: 10px;
 			overflow: auto;
 		}
-		#sendbox{
+		#sendbox {
 			width: 100%;
 			text-align: center;
 		}
-		#sendbox input{
+		#sendbox input {
 			display: inline-block;
 		}
 		input[name="name"]{
@@ -47,62 +48,92 @@
 		input[type="button"]{
 			width:10%;
 		}
+
 		.message {
 			width: 73%;
 			display: inline-block;
 			padding: 5px 0 5px 10px;
 		}
-		.message > span{
+		.message > span {
 			width: 25%;
 			display: inline-block;
 		}
-		.message > span::before{
+		.message > span::before {
 			color: darkred;
-			content: "{";
+			content: " [ ";
 		} 
-		.msg > span::after {
+		.message > span::after {
 			color: darkred;
-			content: " } ";
+			content: " ]：";
 		}
 	</style>
 </head>
 <body>
 	<div id="container">
-		<div id="status-box">Server: <span id="status">-</span> / <span id="online">0</span>online.
+		<div id="status-box">Server: <span id="status">--</span> / <span id="online">0</span> online.
 		</div>
 	<div id="content">
-		<div id="message">
-			<span class="name">Minn</span>
-			Hello!
+		<div class="message">
+			<span class="name">Minn</span>Hello!
 		</div>
-		<div id="message">
-			<span class="name">Eddie</span>
-			Hi!
+		<div class="message">
+			<span class="name">Eddie</span>Hi!
 		</div>
 	</div>
+	<br/>
 	<div id="sendbox">
 		<form id="sendform">
-			<input type="text" name="name" id="name" eholder="暱稱"/>
-			<input type="text" name="message" id="message" eholder="想說什麼?"/>
+			<input type="text" name="name" id="name" placeholder="暱稱"/>
+			<input type="text" name="message" id="message" placeholder="想說什麼?"/>
 			<input type="submit" value="送出" />
 		</form>
 	</div>
 	</div>
 
 	<script>
-		document.addEventListener("DOMContentLaoaded", ()=>{
-			var status = $('#status');
-			var online = $('#online');
+		document.addEventListener("DOMContentLoaded", ()=>{
+			var status = $('#status')[0];
+			var online = $('#online')[0];
+			var sendForm = $('#sendform')[0];
+			
 			socket.on("connect", function(){
-				status.innertText = "Connected!";
+				status.innerText = "Connected!";
 			});
 			socket.on("disconnect", function () {
-				status.innertText = "Disconnected!";
+				status.innerText = "Disconnected!";
 			});
-			socket.on("on;ine", function (amt) {
-				online.innertText = amt;
+			socket.on("online", function (amt) {
+				online.innerText = amt;
+			});
+
+			sendForm.addEventListener("submit", function(element){
+				checkSend();
+				element.preventDefault();
+				var data = {};
+				var child = sendForm.children;
+				$(child).each(function(index, e){
+					if(e.name){
+						data[e.name] = e.value;
+					}
+				});
+				socket.emit("send", data);
 			});
 		});
+
+		function checkSend(){
+			var msg = '';
+			if(!$('#name').val()){
+				msg += 'Please Inter Your Anonymity.\n';
+			}
+
+			if(!$('#message').val().trim()){
+				msg += 'Please Inter Your Message.';
+			}
+
+			if(msg){
+				alert(msg);
+			}
+		}
 	</script>
 </body>
 </html>
