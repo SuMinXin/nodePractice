@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on("send", (message) => {
-		if (Object.keys(message).trim().length < 1) return;
+		if (Object.keys(message).length < 1) return;
 		io.emit("message", message);
 		console.log(message);
 	});
